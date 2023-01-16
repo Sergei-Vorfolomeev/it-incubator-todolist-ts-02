@@ -1,15 +1,17 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {TodolistDomainType} from "../TodolistsList";
-import {useDispatch} from "react-redux";
-import {getTodolistsTC} from "../../../store/todolistReducer";
-import {AppDispatch} from "../../../store/store";
+import {TaskAPIType} from "../../../store/tasksReducer";
 
 type TodolistPropsType = {
     todolist: TodolistDomainType
 }
+export type TasksStateType = {
+    [key:string]: TaskAPIType[]
+}
+
 
 export const Todolist: React.FC<TodolistPropsType> = ({todolist}) => {
-    console.log('render')
+
     const {id, title, filter} = todolist
 
     return (

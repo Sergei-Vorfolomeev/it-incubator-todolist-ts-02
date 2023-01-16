@@ -4,10 +4,10 @@ import {TodolistDomainType} from "../features/TodolistsList/TodolistsList";
 
 const initialState: TodolistDomainType[] = []
 
-export const todolistReducer = (state: TodolistDomainType[] = initialState, action: GeneralACTypes) => {
+export const todolistReducer = (state: TodolistDomainType[] = initialState, action: GeneralACTypes): TodolistDomainType[] => {
     switch (action.type) {
         case 'SET-TODOLISTS': {
-            return [...action.payload.todolists]
+            return action.payload.todolists.map(el => ({...el, filter: 'all'}))
         }
         default:
             return state
@@ -34,4 +34,4 @@ export const getTodolistsTC = () => (dispatch: Dispatch) => {
 // types
 
 type GeneralACTypes = SetTodolistsACType
-type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
+export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
