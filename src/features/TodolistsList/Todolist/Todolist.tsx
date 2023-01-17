@@ -2,8 +2,10 @@ import React, {useEffect} from 'react';
 import {TodolistDomainType} from "../TodolistsList";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "../../../store/store";
-import {TasksStateType} from "../../../api/tasksAPI";
-import {getTasksTC, removeTaskTC} from "../../../store/tasksReducer";
+import {TasksStateType, TasksStatuses} from "../../../api/tasksAPI";
+import {addTaskTC, getTasksTC, removeTaskTC, updateTaskTC} from "../../../store/tasksReducer";
+import {InputComponent} from "../../../components/InputComponent";
+import {Task} from "./Task/Task";
 
 type TodolistPropsType = {
     todolist: TodolistDomainType
@@ -18,8 +20,14 @@ export const Todolist: React.FC<TodolistPropsType> = ({todolist}) => {
     const removeTask = (taskID: string) => {
         dispatch(removeTaskTC(id, taskID))
     }
+    const addTask = (title: string) => {
+        dispatch(addTaskTC(id, title))
+    }
+    const updateTask = (taskID: string, status: TasksStatuses) => {
+        dispatch(updateTaskTC(id, taskID, {status}))
+    }
 
-    useEffect( () => {
+    useEffect(() => {
         dispatch(getTasksTC(id))
     }, [])
 
@@ -27,18 +35,14 @@ export const Todolist: React.FC<TodolistPropsType> = ({todolist}) => {
         <div>
             <div>
                 <h3>{title}</h3>
-                <div>
-                    <input/>
-                    <button>+</button>
-                </div>
+                <InputComponent callBack={addTask}/>
                 <ul>
                     {tasks[id].map(el => {
                         return (
-                            <li><
-                                input type="checkbox" checked={true}/>
-                                <span>{el.title}</span>
-                                <button onClick={() => removeTask(el.id)}>X</button>
-                            </li>
+                            <Task key={el.id}
+                                  task={el}
+                                  removeTask={removeTask}
+                                  updateTask={updateTask}/>
                         )
                     })}
                 </ul>
