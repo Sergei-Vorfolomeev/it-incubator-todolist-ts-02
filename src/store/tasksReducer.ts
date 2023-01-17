@@ -118,7 +118,7 @@ type AddTaskACType = ReturnType<typeof addTaskAC>
 type UpdateTaskACType = ReturnType<typeof updateTaskAC>
 
 
-type TaskDomainModelType = {
+export type TaskDomainModelType = {
     title?: string
     description?: string
     completed?: boolean

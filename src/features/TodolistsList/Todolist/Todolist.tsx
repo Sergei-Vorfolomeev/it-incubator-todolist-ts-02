@@ -2,8 +2,8 @@ import React, {useEffect} from 'react';
 import {TodolistDomainType} from "../TodolistsList";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "../../../store/store";
-import {TasksStateType, TasksStatuses} from "../../../api/tasksAPI";
-import {addTaskTC, getTasksTC, removeTaskTC, updateTaskTC} from "../../../store/tasksReducer";
+import {TasksStateType} from "../../../api/tasksAPI";
+import {addTaskTC, getTasksTC, removeTaskTC, TaskDomainModelType, updateTaskTC} from "../../../store/tasksReducer";
 import {InputComponent} from "../../../components/InputComponent";
 import {Task} from "./Task/Task";
 
@@ -23,8 +23,8 @@ export const Todolist: React.FC<TodolistPropsType> = ({todolist}) => {
     const addTask = (title: string) => {
         dispatch(addTaskTC(id, title))
     }
-    const updateTask = (taskID: string, status: TasksStatuses) => {
-        dispatch(updateTaskTC(id, taskID, {status}))
+    const updateTask = (taskID: string, domainModel: TaskDomainModelType) => {
+        dispatch(updateTaskTC(id, taskID, domainModel))
     }
 
     useEffect(() => {
