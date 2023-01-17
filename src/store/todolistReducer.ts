@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {TodolistAPIType, todolistsAPI} from "../api/todolistsAPI";
+import {TodolistAPIResponseType, todolistsAPI} from "../api/todolistsAPI";
 import {TodolistDomainType} from "../features/TodolistsList/TodolistsList";
 
 const initialState: TodolistDomainType[] = []
@@ -16,7 +16,7 @@ export const todolistReducer = (state: TodolistDomainType[] = initialState, acti
 
 
 // actions
-const setTodolistsAC = (todolists: TodolistAPIType[]) => {
+const setTodolistsAC = (todolists: TodolistAPIResponseType[]) => {
     return {
         type: 'SET-TODOLISTS',
         payload: {

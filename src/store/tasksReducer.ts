@@ -1,15 +1,22 @@
 import {SetTodolistsACType} from "./todolistReducer";
-import {TasksStateType} from "../features/TodolistsList/Todolist/Todolist";
+import {Dispatch} from "redux";
+import {TaskAPIType, tasksAPI, TasksStateType} from "../api/tasksAPI";
 
 
 const initialState: TasksStateType = {}
 
 export const tasksReducer = (state: any = initialState, action: GeneralACTypes): TasksStateType => {
     switch (action.type) {
-        case 'SET-TODOLISTS': {
-            const copyState: TasksStateType  = {...state}
+        case 'SET-TODOLISTS':
+            const copyState: TasksStateType = {...state}
             action.payload.todolists.forEach(el => copyState[el.id] = [])
             return copyState
+        case "GET-TASKS":
+            return {...state, [action.payload.todolistID]: action.payload.tasks}
+        case "REMOVE-TASK":
+            return {
+                ...state,
+                [action.payload.todolistID]: state[action.payload.todolistID].filter((el: TaskAPIType) => el.id !== action.payload.taskID)
         }
         default:
             return state
@@ -17,38 +24,38 @@ export const tasksReducer = (state: any = initialState, action: GeneralACTypes):
 }
 
 //actions
-
+const getTasksAC = (todolistID: string, tasks: TaskAPIType[]) => {
+    return {
+        type: 'GET-TASKS',
+        payload: {
+            todolistID, tasks
+        }
+    } as const
+}
+const removeTaskAC = (todolistID: string, taskID: string) => {
+    return {
+        type: 'REMOVE-TASK',
+        payload: {
+            todolistID, taskID
+        }
+    } as const
+}
 
 //thunks
-
+export const getTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
+    tasksAPI.getTasks(todolistID)
+        .then(res => dispatch(getTasksAC(todolistID, res.items)))
+}
+export const removeTaskTC = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
+    tasksAPI.removeTask(todolistID, taskID)
+        .then(res => dispatch(removeTaskAC(todolistID, taskID)))
+}
 
 //types
-type GeneralACTypes = SetTodolistsACType
-export type TaskAPIType = {
-    description: string
-    title: string
-    completed: boolean
-    status: TasksStatuses
-    priority: TasksPriorities
-    startDate: string
-    deadline: string
-    id: string
-    todoListId: string
-    order: number
-    addedDate: string
-}
+type GeneralACTypes =
+    | SetTodolistsACType
+    | GetTasksACType
+    | RemoveTaskACType
+type GetTasksACType = ReturnType<typeof getTasksAC>
+type RemoveTaskACType = ReturnType<typeof removeTaskAC>
 
-export enum TasksStatuses {
-    New,
-    InProgress,
-    Completed,
-    Draft,
-}
-
-export enum TasksPriorities {
-    Low,
-    Middle,
-    High,
-    Urgently,
-    Later,
-}
